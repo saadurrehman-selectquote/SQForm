@@ -21,7 +21,8 @@ import {
   SQFormCheckbox,
   SQFormDropdown,
   SQFormReadOnlyField,
-  SQFormResetButtonWithConfirmation
+  SQFormResetButtonWithConfirmation,
+  SQFormMultiSelect
 } from '../src';
 
 export default {
@@ -53,25 +54,39 @@ const MOCK_FORM_ENTITY = {
   tenThousandOptions: '',
   note: ''
 };
+
 const MOCK_ACTIONS_FORM_ENTITY = {
   actions: '',
   note: ''
 };
+
 const MOCK_FORM_WITH_BOOLEANS_ENTITY = {
   ...MOCK_FORM_ENTITY,
   hobby: '',
   cool: false,
   lame: false
 };
+
 const MOCK_FORM_FOR_FIELD_ARRAY = {
   ...MOCK_FORM_ENTITY,
   friends: ['Joe', 'Jane', 'Jack', 'Jill']
+};
+
+const MOCK_FORM_FOR_MULTISELECT = {
+  friends: []
 };
 
 const MOCK_STATE_OPTIONS = [
   {label: 'Arizona', value: 'AZ'},
   {label: 'Kansas', value: 'KS'},
   {label: 'Missouri', value: 'MO'}
+];
+
+const MOCK_FRIENDS_OPTIONS = [
+  {label: 'Joe', value: 'Joe'},
+  {label: 'Jane', value: 'Jane'},
+  {label: 'Jack', value: 'Jack'},
+  {label: 'Jill', value: 'Jill'}
 ];
 
 const handleSubmit = (values, actions) => {
@@ -325,6 +340,39 @@ export const basicFormWithCustomOnChange = () => {
           <Grid container justify="flex-end">
             <SQFormButton>Submit</SQFormButton>
           </Grid>
+        </Grid>
+      </SQForm>
+    </Card>
+  );
+};
+
+export const basicFormWithMultiSelect = () => {
+  const validationSchema = {
+    friends: Yup.string().required('Required')
+  };
+
+  return (
+    <Card raised style={{padding: '16px', minWidth: '768px'}}>
+      <SQForm
+        initialValues={MOCK_FORM_FOR_MULTISELECT}
+        onSubmit={handleSubmit}
+        validationSchema={validationSchema}
+        muiGridProps={{
+          spacing: 2,
+          justify: 'space-between',
+          alignItems: 'center'
+        }}
+      >
+        <SQFormMultiSelect
+          name="friends"
+          label="Friends"
+          size={5}
+          isRequired={true}
+        >
+          {MOCK_FRIENDS_OPTIONS}
+        </SQFormMultiSelect>
+        <Grid item size={2} style={{alignSelf: 'flex-end'}}>
+          <SQFormIconButton IconComponent={CheckMarkIcon} />
         </Grid>
       </SQForm>
     </Card>
