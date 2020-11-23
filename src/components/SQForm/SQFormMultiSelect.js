@@ -8,6 +8,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import Grid from '@material-ui/core/Grid';
 import Checkbox from '@material-ui/core/Checkbox';
 import ListItemText from '@material-ui/core/ListItemText';
+import {useSQFormContext} from '../../../src';
 
 import {useForm} from './useForm';
 
@@ -17,33 +18,30 @@ function SQFormMultiSelect({
   isRequired = false,
   label,
   name,
-  onBlur,
-  onChange,
   size = 'auto'
 }) {
+  const {setFieldValue} = useSQFormContext();
   const {
     formikField: {field},
     fieldState: {isFieldError},
-    fieldHelpers: {handleBlur, handleChange, HelperTextComponent}
+    fieldHelpers: {handleBlur, HelperTextComponent}
   } = useForm({
     name,
-    isRequired,
-    onBlur,
-    onChange
+    isRequired
   });
   const labelID = label.toLowerCase();
 
-  const handleMultiSelectChange = evt => {
-    const selectAllWasChecked = evt.target.value.includes('ALL');
-    const selectNoneWasChecked = evt.target.value.includes('NONE');
+  const handleMultiSelectChange = event => {
+    const selectAllWasChecked = event.target.value.includes('ALL');
+    const selectNoneWasChecked = event.target.value.includes('NONE');
 
     const values = selectAllWasChecked
       ? children.map(option => option.value)
       : selectNoneWasChecked
       ? []
-      : evt.target.value;
-    evt.target.value = values;
-    handleChange(evt);
+      : event.target.value;
+
+    setFieldValue(name, values);
   };
 
   return (
@@ -97,10 +95,6 @@ SQFormMultiSelect.propTypes = {
   label: PropTypes.string.isRequired,
   /** Name identifier of the input field */
   name: PropTypes.string.isRequired,
-  /** Custom onBlur event callback */
-  onBlur: PropTypes.func,
-  /** Custom onChange event callback */
-  onChange: PropTypes.func,
   /** Size of the input given full-width is 12. */
   size: PropTypes.oneOf(['auto', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
 };
